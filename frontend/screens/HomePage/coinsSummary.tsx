@@ -39,6 +39,13 @@ export default function CoinSummaryPage({ data }: Coins) {
     return coin?.image || noImage;
   };
 
+  //make the price two decimal place
+  const getPrice = (price: string) => {
+    const partialPrice = parseInt(price);
+
+    return partialPrice.toFixed(2);
+  };
+
   return (
     <View>
       <FlatList
@@ -46,7 +53,7 @@ export default function CoinSummaryPage({ data }: Coins) {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => navigation.navigate("coins")}
-            className="bg-black my-2 rounded-lg  flex-row px-2  item-center  py-4"
+            className="bg-black my-2 rounded-lg  flex-row px-2  item-center  py-4 justify-between"
             style={{
               height: height * 0.1 + (height * 0.1) / 2,
               width: width * 0.9,
@@ -67,7 +74,9 @@ export default function CoinSummaryPage({ data }: Coins) {
                 </Text>
               </View>
             </View>
-            <View></View>
+            <View className="  justify-center">
+              <Text className=" text-white">{getPrice(item.priceUsd)}</Text>
+            </View>
           </TouchableOpacity>
         )}
       />
