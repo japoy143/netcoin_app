@@ -31,7 +31,6 @@ export default function Home() {
 
   // all crypto
   const [coins, setCoins] = useState([]);
-  const [nowCoins, setNowCoins] = useState([]);
 
   useEffect(() => {
     const fetchCrypto = async () => {

@@ -13,6 +13,9 @@ type coinsProps = {
   data: any[];
 };
 
+//images Models
+import CryptoImgs from "../models/cryptoImgs";
+
 //API
 const API_KEY = "34413f7c-4968-4dfb-a496-76844da6f4f1";
 import axios from "axios";
@@ -22,36 +25,37 @@ export default function TopTrends({ data }: coinsProps) {
   const window = useWindowDimensions();
   const [currentindex, setCurrentIndex] = useState(0);
 
-  //imgs
-  const imgs: any = {
-    BTC: require("../assets/imgs/bitcoin.png"),
-    ETH: require("../assets/imgs/etheruem.png"),
-    USDT: require("../assets/imgs/tether.png"),
-    BNB: require("../assets/imgs/binance.png"),
-    SOL: require("../assets/imgs/solana.png"),
+  const CryptoImage = new CryptoImgs({});
+
+  const eachImages = CryptoImage.state.imgs.map((each) => ({
+    image: each.cryptoImgs,
+    name: each.name,
+  }));
+
+  const Images = {
     NO: require("../assets/imgs/noImg.jpg"),
+    StatGreen: require("../assets/imgs/stat_green.png"),
+    StatRed: require("../assets/imgs/stat_red.png"),
   };
 
-  const [nowCoins, setNowCoins] = useState([]);
-  useEffect(() => {
-    const fetchCrypto = async () => {
-      const coins = await axios.get(API, {
-        headers: { Authorization: `Bearer ${API_KEY}` },
-      });
-      setNowCoins(coins.data["data"]);
-    };
+  //function to find the symbol and return its image value
+  const getSymbol = (symbol: string) => {
+    const coinImage = eachImages.find((crypto) => crypto.name === symbol);
 
-    const intervalID = setInterval(() => {
-      fetchCrypto();
-    }, 5000);
-    fetchCrypto();
-    return () => clearInterval(intervalID);
-  }, []);
+    return coinImage?.image || Images.NO;
+  };
 
   // function to make the crypto price in two decimal
   const getPrice = (price: string) => {
     let priceJson = parseInt(price);
     return priceJson.toFixed(2);
+  };
+
+  //remove the decimal
+  const getPercent = (percent: string) => {
+    let num = parseInt(percent);
+
+    return num;
   };
 
   return (
@@ -76,7 +80,7 @@ export default function TopTrends({ data }: coinsProps) {
             >
               <View className=" items-center">
                 <Image
-                  source={imgs[item.symbol] || imgs.NO}
+                  source={getSymbol(item.symbol)}
                   className=" h-20 w-20"
                   resizeMode="contain"
                 />
@@ -89,6 +93,15 @@ export default function TopTrends({ data }: coinsProps) {
                 <Text className=" text-3xl font-semibold">
                   ${getPrice(item.priceUsd)}
                 </Text>
+                <Image
+                  source={
+                    getPercent(item.changePercent24Hr) < 0
+                      ? Images.StatRed
+                      : Images.StatGreen
+                  }
+                  className="h-10 w-10"
+                  resizeMode="contain"
+                />
               </View>
             </View>
           )}

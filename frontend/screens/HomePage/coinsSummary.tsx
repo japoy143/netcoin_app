@@ -33,8 +33,9 @@ export default function CoinSummaryPage({ data }: Coins) {
     return data.filter((name) => name["symbol"] === crypto.name);
   });
 
-  const getImageForSymbol = (symbol: string) => {
-    const coin = eachCrypto.find((c) => c.name === symbol);
+  // get the name and return its image value
+  const getSymbol = (symbol: string) => {
+    const coin = eachCrypto.find((crypto) => crypto.name === symbol);
 
     return coin?.image || noImage;
   };
@@ -44,6 +45,20 @@ export default function CoinSummaryPage({ data }: Coins) {
     const partialPrice = parseInt(price);
 
     return partialPrice.toFixed(2);
+  };
+
+  //remove decimal
+  const getPercentage = (percent: string) => {
+    const pricePercentage = parseInt(percent);
+
+    return pricePercentage;
+  };
+
+  //split the name make it only one to make it shorter
+  const getCryptoName = (name: string) => {
+    let currentName = name.split(" ");
+
+    return currentName[0];
   };
 
   return (
@@ -61,21 +76,32 @@ export default function CoinSummaryPage({ data }: Coins) {
           >
             <View className=" flex-row items-center ">
               <Image
-                source={getImageForSymbol(item.symbol)}
+                source={getSymbol(item.symbol)}
                 className="h-[80%] w-[60] mr-4"
                 resizeMode="contain"
               />
               <View>
                 <Text className=" text-white font-medium text-xl">
-                  {item.name}
+                  {getCryptoName(item.name)}
                 </Text>
                 <Text className=" text-gray-400 font-medium text-base">
                   {item.symbol}
                 </Text>
               </View>
             </View>
-            <View className="  justify-center">
-              <Text className=" text-white">{getPrice(item.priceUsd)}</Text>
+            <View className="  justify-center pr-10">
+              <Text className=" text-white  font-medium text-lg">
+                ${getPrice(item.priceUsd)}
+              </Text>
+              <Text
+                className={`${
+                  getPercentage(item.changePercent24Hr) < 0
+                    ? "text-red-500"
+                    : "text-green-500"
+                }`}
+              >
+                {getPercentage(item.changePercent24Hr)}%
+              </Text>
             </View>
           </TouchableOpacity>
         )}
