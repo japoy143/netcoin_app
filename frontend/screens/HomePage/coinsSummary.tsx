@@ -21,6 +21,11 @@ const eachCrypto = crypto.state.imgs.map((img) => ({
   name: img.name,
 }));
 
+const StatImage = {
+  statGreen: require("../../assets/imgs/stat_green.png"),
+  statRed: require("../../assets/imgs/stat_red.png"),
+};
+
 const noImage = require("../../assets/imgs/noImg.jpg");
 
 export default function CoinSummaryPage({ data }: Coins) {
@@ -44,7 +49,7 @@ export default function CoinSummaryPage({ data }: Coins) {
   const getPrice = (price: string) => {
     const partialPrice = parseInt(price);
 
-    return partialPrice.toFixed(2);
+    return partialPrice.toFixed(0);
   };
 
   //remove decimal
@@ -84,21 +89,32 @@ export default function CoinSummaryPage({ data }: Coins) {
                 <Text className=" text-white font-medium text-xl">
                   {getCryptoName(item.name)}
                 </Text>
-                <Text className=" text-gray-400 font-medium text-base">
-                  {item.symbol}
-                </Text>
+                <View className=" flex-row items-center ">
+                  <Text className=" text-white font-medium text-base">
+                    {item.symbol}
+                  </Text>
+                  <Text className=" text-white font-medium text-base ml-4">
+                    ${getPrice(item.priceUsd)}
+                  </Text>
+                </View>
               </View>
             </View>
-            <View className="  justify-center pr-10">
-              <Text className=" text-white  font-medium text-lg">
-                ${getPrice(item.priceUsd)}
-              </Text>
+            <View className=" flex-row  items-center pr-4   ">
+              <Image
+                source={
+                  getPercentage(item.changePercent24Hr) < 0
+                    ? StatImage.statRed
+                    : StatImage.statGreen
+                }
+                className=" h-[60%] w-[50] mr-2"
+                resizeMode="contain"
+              />
               <Text
                 className={`${
                   getPercentage(item.changePercent24Hr) < 0
                     ? "text-red-500"
                     : "text-green-500"
-                }`}
+                } text-lg font-medium mt-4`}
               >
                 {getPercentage(item.changePercent24Hr)}%
               </Text>

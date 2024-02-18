@@ -16,11 +16,6 @@ type coinsProps = {
 //images Models
 import CryptoImgs from "../models/cryptoImgs";
 
-//API
-const API_KEY = "34413f7c-4968-4dfb-a496-76844da6f4f1";
-import axios from "axios";
-const API = "https://api.coincap.io/v2/assets";
-
 export default function TopTrends({ data }: coinsProps) {
   const window = useWindowDimensions();
   const [currentindex, setCurrentIndex] = useState(0);
@@ -75,7 +70,7 @@ export default function TopTrends({ data }: coinsProps) {
           }}
           renderItem={({ item, index }) => (
             <View
-              className="  bg-white  justify-evenly items-center  flex-row "
+              className="  bg-white  justify-between items-center  flex-row px-8 "
               style={{ height: window.height * 0.2, width: window.width }}
             >
               <View className=" items-center">
@@ -85,23 +80,34 @@ export default function TopTrends({ data }: coinsProps) {
                   resizeMode="contain"
                 />
 
-                <Text className=" text-xl font-semibold">{item.name}</Text>
-                <Text className=" text-lg font-medium">{item.symbol}</Text>
+                <Text className=" text-2xl font-semibold">{item.name}</Text>
+                <Text className=" text-xl font-bold ">{item.symbol}</Text>
               </View>
 
               <View>
-                <Text className=" text-3xl font-semibold">
+                <Text className=" text-4xl font-semibold">
                   ${getPrice(item.priceUsd)}
                 </Text>
-                <Image
-                  source={
-                    getPercent(item.changePercent24Hr) < 0
-                      ? Images.StatRed
-                      : Images.StatGreen
-                  }
-                  className="h-10 w-10"
-                  resizeMode="contain"
-                />
+                <View className=" flex-row justify-end  items-center mr-4 mt-2">
+                  <Image
+                    source={
+                      getPercent(item.changePercent24Hr) < 0
+                        ? Images.StatRed
+                        : Images.StatGreen
+                    }
+                    className="h-[120%] w-20"
+                    resizeMode="contain"
+                  />
+                  <Text
+                    className={`${
+                      getPercent(item.changePercent24Hr) < 0
+                        ? " text-red-500"
+                        : " text-green-500"
+                    } font-medium text-3xl mt-4 ml-2`}
+                  >
+                    {getPercent(item.changePercent24Hr)}%
+                  </Text>
+                </View>
               </View>
             </View>
           )}
