@@ -49,8 +49,12 @@ export default function Home() {
   }, []);
 
   //Navigations
-  const nav = ["Coins", "Statistics", "Market"];
-  const screens = [<Coins data={coins} />, <Statistics />, <Market />];
+  const nav = ["Coins", "Market", "Statistics"];
+  const screens = [
+    <Coins data={coins} />,
+    <Market data={coins} />,
+    <Statistics />,
+  ];
   const [navIndex, setNavIndex] = useState(0);
 
   //topfive
