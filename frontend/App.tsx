@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import StackRoutes from "./routes/StackRoutes";
 

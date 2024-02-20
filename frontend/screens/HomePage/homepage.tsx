@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   useWindowDimensions,
+  KeyboardAvoidingView,
 } from "react-native";
 import { BellIcon } from "react-native-heroicons/outline";
 
@@ -61,7 +62,7 @@ export default function Home() {
   const topFive: string[] = coins.slice(0, 5);
 
   return (
-    <View className="flex-1">
+    <KeyboardAvoidingView className="flex-1" behavior="padding" enabled>
       <View className={` h-[30%]  bg-black`} style={{ marginTop: height }}>
         <View className=" flex-row   mt-2 items-center justify-between px-5">
           <View className=" w-10"></View>
@@ -80,7 +81,7 @@ export default function Home() {
         </View>
         <Trends data={topFive} />
       </View>
-      <View className="flex-row justify-between mt-2 mx-4">
+      <View className="flex-row justify-between mt-2 mx-4 ">
         {nav.map((nav, i) => (
           <TouchableOpacity
             key={i}
@@ -96,6 +97,6 @@ export default function Home() {
         ))}
       </View>
       <View className="mt-2 items-center flex-1 ">{screens[navIndex]}</View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  KeyboardAvoidingView,
 } from "react-native";
 
 //icons
@@ -34,13 +35,24 @@ export default function MarketSummaryPage({ data }: Crypto) {
   const width = window.width;
 
   const [search, setSearch] = useState("");
-  const [crypto, setCrypto] = useState("Etheruem");
   const [cryptoImg, setCryptoImg] = useState(sample);
 
+  //cryptoName
+  const [cryptoName, setCryptoName] = useState<string>("Crypto");
   //cryptoCount
-  const [cryptoCount, setCryptoCount] = useState<number>(0);
+  const [cryptoCount, setCryptoCount] = useState<number | undefined>(undefined);
+  const handleCryptoCount = (count: string) => {
+    const num = parseInt(count);
+
+    setCryptoCount(isNaN(num) ? undefined : num);
+  };
   //price
-  const [cryptoPrice, setCryptoPrice] = useState<number>(0);
+  const [cryptoPrice, setCryptoPrice] = useState<number | undefined>(undefined);
+  const handleCryptoPrice = (price: string) => {
+    const num = parseInt(price);
+
+    setCryptoPrice(isNaN(num) ? undefined : num);
+  };
 
   //show only the crypto with picture
   const showOnlyWithPicture = eachCryptoImage.flatMap((cryp) => {
@@ -68,6 +80,25 @@ export default function MarketSummaryPage({ data }: Crypto) {
     return cryptoName[0];
   };
 
+  //state for converting values
+  const changeValueForConversion = (
+    name: string,
+    symbol: string,
+    cryptoPrice: string
+  ) => {
+    setCryptoName(name);
+    setCryptoImg(getCryptoImage(symbol));
+    setCryptoPrice(getprice(cryptoPrice));
+    setCryptoCount(1);
+  };
+
+  //convert
+  const convertCrypto = () => {
+    let cryptocount = cryptoCount === undefined ? 0 : cryptoCount;
+    let cryptoprice = cryptoPrice === undefined ? 0 : cryptoPrice;
+    setCryptoPrice(cryptocount * cryptoprice);
+  };
+
   return (
     <View className=" flex-1">
       <View className=" flex-row  items-center ">
@@ -88,24 +119,35 @@ export default function MarketSummaryPage({ data }: Crypto) {
       </View>
 
       <View
-        className=" bg-black rounded-md mt-2 items-center "
+        className=" bg-black rounded-md mt-2  px-6 "
         style={{ height: height * 0.15 }}
       >
-        <Text className=" text-xl text-white font-medium ">{crypto}</Text>
-        <View className=" flex-row  items-center ">
+        <View className="flex-row mt-4 justify-between ">
+          <Text className=" text-xl text-white font-medium ">{cryptoName}</Text>
+          <TouchableOpacity
+            className=" h[10%] w-20 bg-white  rounded items-center justify-center"
+            onPress={() => convertCrypto()}
+          >
+            <Text className=" text-base font-medium">Convert</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View className=" flex-row   ">
           <Image
             source={cryptoImg}
             className=" h-16 w-10 mr-2 "
             resizeMode="contain"
           />
-          <View className=" flex-row mt-4  items-center">
+          <View className=" flex-row  items-center">
             <View
               className=" bg-white rounded-md px-2 justify-center"
               style={{ height: (height * 0.1) / 2.5, width: width * 0.3 }}
             >
               <TextInput
-                value={cryptoCount.toString()}
-                onChangeText={(val) => setCryptoCount(parseInt(val))}
+                value={cryptoCount === undefined ? "" : cryptoCount.toString()}
+                onChangeText={handleCryptoCount}
+                keyboardType="numeric"
+                placeholder="0"
               />
             </View>
             <Text className=" ml-2 mr-2 text-white font-medium text-5xl">
@@ -116,8 +158,10 @@ export default function MarketSummaryPage({ data }: Crypto) {
               style={{ height: (height * 0.1) / 2.5, width: width * 0.3 }}
             >
               <TextInput
-                value={cryptoPrice.toString()}
-                onChangeText={(val) => setCryptoPrice(parseInt(val))}
+                value={cryptoPrice === undefined ? "" : cryptoPrice.toString()}
+                onChangeText={handleCryptoPrice}
+                placeholder="0"
+                keyboardType="numeric"
               />
             </View>
           </View>
@@ -131,6 +175,9 @@ export default function MarketSummaryPage({ data }: Crypto) {
             <TouchableOpacity
               className=" bg-black mr-1 ml-1  mb-2 rounded-md flex-row items-center justify-evenly"
               style={{ height: height * 0.1, width: width * 0.44 }}
+              onPress={() =>
+                changeValueForConversion(item.name, item.symbol, item.priceUsd)
+              }
             >
               <Image
                 source={getCryptoImage(item.symbol)}
