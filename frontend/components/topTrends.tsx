@@ -13,45 +13,17 @@ type coinsProps = {
   data: any[];
 };
 
-//images Models
-import CryptoImgs from "../models/cryptoImgs";
+import {
+  getPrice,
+  getCryptoImage,
+  getPercent,
+  getPriceTwoDecimal,
+  Images,
+} from "./reusableFunctions";
 
 export default function TopTrends({ data }: coinsProps) {
   const window = useWindowDimensions();
   const [currentindex, setCurrentIndex] = useState(0);
-
-  const CryptoImage = new CryptoImgs({});
-
-  const eachImages = CryptoImage.state.imgs.map((each) => ({
-    image: each.cryptoImgs,
-    name: each.name,
-  }));
-
-  const Images = {
-    NO: require("../assets/imgs/noImg.jpg"),
-    StatGreen: require("../assets/imgs/stat_green.png"),
-    StatRed: require("../assets/imgs/stat_red.png"),
-  };
-
-  //function to find the symbol and return its image value
-  const getSymbol = (symbol: string) => {
-    const coinImage = eachImages.find((crypto) => crypto.name === symbol);
-
-    return coinImage?.image || Images.NO;
-  };
-
-  // function to make the crypto price in two decimal
-  const getPrice = (price: string) => {
-    let priceJson = parseInt(price);
-    return priceJson.toFixed(2);
-  };
-
-  //remove the decimal
-  const getPercent = (percent: string) => {
-    let num = parseInt(percent);
-
-    return num;
-  };
 
   return (
     <View className="mt-4 items-center mx-4  ">
@@ -75,7 +47,7 @@ export default function TopTrends({ data }: coinsProps) {
             >
               <View className=" items-center">
                 <Image
-                  source={getSymbol(item.symbol)}
+                  source={getCryptoImage(item.symbol)}
                   className=" h-20 w-20"
                   resizeMode="contain"
                 />
@@ -86,7 +58,7 @@ export default function TopTrends({ data }: coinsProps) {
 
               <View>
                 <Text className=" text-4xl font-semibold">
-                  ${getPrice(item.priceUsd)}
+                  ${getPriceTwoDecimal(item.priceUsd)}
                 </Text>
                 <View className=" flex-row justify-end  items-center mr-4 mt-2">
                   <Image

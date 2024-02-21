@@ -91,6 +91,10 @@ class CryptoImgs extends Component<{}, State> {
           cryptoImgs: require("../assets/imgs/OP.png"),
           name: "OP",
         },
+        {
+          cryptoImgs: require("../assets/imgs/noImg.jpg"),
+          name: "NO",
+        },
       ],
     };
   }

@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  KeyboardAvoidingView,
 } from "react-native";
 
 //icons
@@ -16,14 +15,14 @@ import { MagnifyingGlassIcon } from "react-native-heroicons/solid";
 //image
 const sample = require("../../assets/imgs/etheruem.png");
 
-//cryptoImages
-import CryptoImgs from "../../models/cryptoImgs";
-
-const CryptoImage = new CryptoImgs({});
-const eachCryptoImage = CryptoImage.state.imgs.map((each) => ({
-  name: each.name,
-  image: each.cryptoImgs,
-}));
+//reusable functions
+import {
+  getPrice,
+  getCryptoImage,
+  getCryptoNameAndSplit,
+  getPercent,
+  filteredDataImage,
+} from "../../components/reusableFunctions";
 
 type Crypto = {
   data: any[];
@@ -54,32 +53,6 @@ export default function MarketSummaryPage({ data }: Crypto) {
     setCryptoPrice(isNaN(num) ? undefined : num);
   };
 
-  //show only the crypto with picture
-  const showOnlyWithPicture = eachCryptoImage.flatMap((cryp) => {
-    return data.filter((name) => name["symbol"] === cryp.name);
-  });
-
-  //getSameImageFunction
-  const getCryptoImage = (symbol: string) => {
-    const image = eachCryptoImage.find((cryp) => cryp.name === symbol);
-
-    return image?.image || null;
-  };
-
-  // fixed without decimal
-  const getprice = (price: string) => {
-    let num = parseInt(price);
-
-    return num;
-  };
-
-  //split one word crypto name
-  const getCryptoName = (name: string) => {
-    let cryptoName = name.split(" ");
-
-    return cryptoName[0];
-  };
-
   //state for converting values
   const changeValueForConversion = (
     name: string,
@@ -88,7 +61,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
   ) => {
     setCryptoName(name);
     setCryptoImg(getCryptoImage(symbol));
-    setCryptoPrice(getprice(cryptoPrice));
+    setCryptoPrice(getPercent(cryptoPrice));
     setCryptoCount(1);
   };
 
@@ -169,7 +142,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
       </View>
       <View className=" items-center mt-2 flex-1">
         <FlatList
-          data={showOnlyWithPicture}
+          data={filteredDataImage(data)}
           numColumns={2}
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -186,9 +159,9 @@ export default function MarketSummaryPage({ data }: Crypto) {
               />
               <View>
                 <Text className=" text-white font-medium text-base">
-                  {getCryptoName(item.name)}
+                  {getCryptoNameAndSplit(item.name)}
                 </Text>
-                <Text className=" text-white">{getprice(item.priceUsd)}</Text>
+                <Text className=" text-white">{getPrice(item.priceUsd)}</Text>
               </View>
             </TouchableOpacity>
           )}
