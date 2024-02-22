@@ -39,18 +39,26 @@ export default function MarketSummaryPage({ data }: Crypto) {
   //cryptoName
   const [cryptoName, setCryptoName] = useState<string>("Crypto");
   //cryptoCount
-  const [cryptoCount, setCryptoCount] = useState<number | undefined>(undefined);
+  const [cryptoCount, setCryptoCount] = useState<number | undefined>(0);
+
   const handleCryptoCount = (count: string) => {
     const num = parseInt(count);
+    const cryptoprice = cryptoPrice === undefined ? 0 : cryptoPrice;
 
     setCryptoCount(isNaN(num) ? undefined : num);
+
+    if (cryptoprice !== 0 && !isNaN(num)) {
+      setCryptoPrice(num * cryptoprice);
+    }
   };
   //price
   const [cryptoPrice, setCryptoPrice] = useState<number | undefined>(undefined);
   const handleCryptoPrice = (price: string) => {
     const num = parseInt(price);
+    const cryptocount = cryptoCount === undefined ? 0 : cryptoCount;
 
     setCryptoPrice(isNaN(num) ? undefined : num);
+    setCryptoCount(isNaN(num) ? undefined : num / cryptocount);
   };
 
   //state for converting values
