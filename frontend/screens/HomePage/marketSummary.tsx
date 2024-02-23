@@ -40,25 +40,33 @@ export default function MarketSummaryPage({ data }: Crypto) {
   const [cryptoName, setCryptoName] = useState<string>("Crypto");
   //cryptoCount
   const [cryptoCount, setCryptoCount] = useState<number | undefined>(0);
+  //price rate for conversion
+  const [priceRate, setPriceRate] = useState<number | undefined>(0);
 
   const handleCryptoCount = (count: string) => {
     const num = parseInt(count);
     const cryptoprice = cryptoPrice === undefined ? 0 : cryptoPrice;
+    const pricerate = priceRate === undefined ? 0 : priceRate;
 
     setCryptoCount(isNaN(num) ? undefined : num);
 
     if (cryptoprice !== 0 && !isNaN(num)) {
-      setCryptoPrice(num * cryptoprice);
+      setCryptoPrice(num * pricerate);
     }
   };
+
   //price
   const [cryptoPrice, setCryptoPrice] = useState<number | undefined>(undefined);
-  const handleCryptoPrice = (price: string) => {
+  const handleCryptoPrice = async (price: string) => {
     const num = parseInt(price);
     const cryptocount = cryptoCount === undefined ? 0 : cryptoCount;
+    const pricerate = priceRate === undefined ? 0 : priceRate;
 
     setCryptoPrice(isNaN(num) ? undefined : num);
-    setCryptoCount(isNaN(num) ? undefined : num / cryptocount);
+
+    if (cryptocount !== 0 && !isNaN(num)) {
+      setCryptoCount(num / pricerate);
+    }
   };
 
   //state for converting values
@@ -70,14 +78,15 @@ export default function MarketSummaryPage({ data }: Crypto) {
     setCryptoName(name);
     setCryptoImg(getCryptoImage(symbol));
     setCryptoPrice(getPercent(cryptoPrice));
+    setPriceRate(getPercent(cryptoPrice));
     setCryptoCount(1);
   };
 
-  //convert
+  //clear
   const convertCrypto = () => {
-    let cryptocount = cryptoCount === undefined ? 0 : cryptoCount;
-    let cryptoprice = cryptoPrice === undefined ? 0 : cryptoPrice;
-    setCryptoPrice(cryptocount * cryptoprice);
+    setCryptoCount(0);
+    setCryptoPrice(0);
+    setCryptoName("Crypto");
   };
 
   return (
@@ -109,7 +118,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
             className=" h[10%] w-20 bg-white  rounded items-center justify-center"
             onPress={() => convertCrypto()}
           >
-            <Text className=" text-base font-medium">Convert</Text>
+            <Text className=" text-base font-medium">Clear</Text>
           </TouchableOpacity>
         </View>
 
