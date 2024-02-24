@@ -33,6 +33,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
   const height = window.height;
   const width = window.width;
 
+  //search value
   const [search, setSearch] = useState("");
   const [cryptoImg, setCryptoImg] = useState(sample);
 
@@ -42,7 +43,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
   const [cryptoCount, setCryptoCount] = useState<number | undefined>(0);
   //price rate for conversion
   const [priceRate, setPriceRate] = useState<number | undefined>(0);
-
+  //setting the textInput cryptoCount
   const handleCryptoCount = (count: string) => {
     const num = parseInt(count);
     const cryptoprice = cryptoPrice === undefined ? 0 : cryptoPrice;
@@ -57,6 +58,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
 
   //price
   const [cryptoPrice, setCryptoPrice] = useState<number | undefined>(undefined);
+  //setting textInput the crypto price
   const handleCryptoPrice = async (price: string) => {
     const num = parseInt(price);
     const cryptocount = cryptoCount === undefined ? 0 : cryptoCount;
@@ -161,27 +163,68 @@ export default function MarketSummaryPage({ data }: Crypto) {
         <FlatList
           data={filteredDataImage(data)}
           numColumns={2}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              className=" bg-black mr-1 ml-1  mb-2 rounded-md flex-row items-center justify-evenly"
-              style={{ height: height * 0.1, width: width * 0.44 }}
-              onPress={() =>
-                changeValueForConversion(item.name, item.symbol, item.priceUsd)
-              }
-            >
-              <Image
-                source={getCryptoImage(item.symbol)}
-                className="h-14 w-14"
-                resizeMode="contain"
-              />
-              <View>
-                <Text className=" text-white font-medium text-base">
-                  {getCryptoNameAndSplit(item.name)}
-                </Text>
-                <Text className=" text-white">{getPrice(item.priceUsd)}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => {
+            if (search === "") {
+              return (
+                <TouchableOpacity
+                  className=" bg-black mr-1 ml-1  mb-2 rounded-md flex-row items-center justify-evenly"
+                  style={{ height: height * 0.1, width: width * 0.45 }}
+                  onPress={() =>
+                    changeValueForConversion(
+                      item.name,
+                      item.symbol,
+                      item.priceUsd
+                    )
+                  }
+                >
+                  <Image
+                    source={getCryptoImage(item.symbol)}
+                    className="h-14 w-14"
+                    resizeMode="contain"
+                  />
+                  <View>
+                    <Text className=" text-white font-medium text-base">
+                      {getCryptoNameAndSplit(item.name)}
+                    </Text>
+                    <Text className=" text-white">
+                      {getPrice(item.priceUsd)}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }
+            if (item.name.toLowerCase().includes(search.toLowerCase())) {
+              return (
+                <TouchableOpacity
+                  className=" bg-black mr-1 ml-1  mb-2 rounded-md flex-row items-center justify-evenly"
+                  style={{ height: height * 0.1, width: width * 0.75 }}
+                  onPress={() =>
+                    changeValueForConversion(
+                      item.name,
+                      item.symbol,
+                      item.priceUsd
+                    )
+                  }
+                >
+                  <Image
+                    source={getCryptoImage(item.symbol)}
+                    className="h-14 w-14"
+                    resizeMode="contain"
+                  />
+                  <View className=" items-center">
+                    <Text className=" text-white font-medium text-2xl">
+                      {getCryptoNameAndSplit(item.name)}
+                    </Text>
+                    <Text className=" text-white text-xl">
+                      {getPrice(item.priceUsd)}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }
+
+            return <View></View>;
+          }}
         />
       </View>
     </View>
