@@ -92,8 +92,8 @@ export default function MarketSummaryPage({ data }: Crypto) {
   };
 
   return (
-    <View className=" flex-1">
-      <View className=" flex-row  items-center ">
+    <View className=" flex-1 mx-2">
+      <View className=" flex-row  items-center  ">
         <View
           className=" bg-gray-300 justify-center px-4 rounded-md "
           style={{ height: (height * 0.1) / 2, width: width * 0.8 }}
@@ -112,9 +112,9 @@ export default function MarketSummaryPage({ data }: Crypto) {
 
       <View
         className=" bg-black rounded-md mt-2  px-6 "
-        style={{ height: height * 0.15 }}
+        style={{ height: height * 0.15, width: width * 0.95 }}
       >
-        <View className="flex-row mt-4 justify-between ">
+        <View className="flex-row mt-4 justify-between  ">
           <Text className=" text-xl text-white font-medium ">{cryptoName}</Text>
           <TouchableOpacity
             className=" h[10%] w-20 bg-white  rounded items-center justify-center"

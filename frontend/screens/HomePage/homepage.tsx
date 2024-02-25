@@ -54,7 +54,7 @@ export default function Home() {
   const screens = [
     <Coins data={coins} />,
     <Market data={coins} />,
-    <Statistics />,
+    <Statistics data={coins} />,
   ];
   const [navIndex, setNavIndex] = useState(0);
 
@@ -81,14 +81,14 @@ export default function Home() {
         </View>
         <Trends data={topFive} />
       </View>
-      <View className="flex-row justify-between mt-2 mx-4 ">
+      <View className="flex-row justify-between mt-2 mx-2">
         {nav.map((nav, i) => (
           <TouchableOpacity
             key={i}
             className="bg-black rounded-md items-center justify-center"
             style={{
               height: (window.height * 0.1) / 2,
-              width: window.width * 0.28,
+              width: window.width * 0.3,
             }}
             onPress={() => setNavIndex(i)}
           >
