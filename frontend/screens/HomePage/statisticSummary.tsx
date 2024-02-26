@@ -3,7 +3,7 @@ import { Text, View, useWindowDimensions } from "react-native";
 import { StatisticList } from "../../components/statisticList";
 
 type statisticsSummaryProps = {
-  data: [];
+  data: any[];
 };
 export default function StatisticsSummaryPage({
   data,
@@ -20,25 +20,12 @@ export default function StatisticsSummaryPage({
   const week = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
   return (
     <View className=" flex-1 ">
-      <View
-        className=" bg-black  rounded-xl  item-center "
-        style={{ height: height * 0.5, width: width * 0.95 }}
-      >
-        <View className=" items-center">
-          <StatisticList
-            width={width * 0.9}
-            height={height * 0.2}
-            data={data}
-          />
-        </View>
-      </View>
+      <StatisticList width={width * 0.95} height={height * 0.5} data={data} />
       <View className="mt-2 items-center">
         <View className=" flex-row ">
           {week.map((day, i) => (
-            <View className=" items-center ">
-              <Text key={i} className=" text-xl font-semibold ml-2 mr-2 ">
-                {day}
-              </Text>
+            <View className=" items-center " key={i}>
+              <Text className=" text-xl font-semibold ml-2 mr-2 ">{day}</Text>
               <View
                 className={`${
                   dayToday === i ? "bg-black" : "bg-none"

@@ -63,7 +63,7 @@ export default function Home() {
 
   return (
     <KeyboardAvoidingView className="flex-1" behavior="padding" enabled>
-      <View className={` h-[30%]  bg-black`} style={{ marginTop: height }}>
+      <View className={` h-[30%]  bg-black  `} style={{ marginTop: height }}>
         <View className=" flex-row   mt-2 items-center justify-between px-5">
           <View className=" w-10"></View>
           <Text
@@ -79,7 +79,9 @@ export default function Home() {
             )}
           </TouchableOpacity>
         </View>
-        <Trends data={topFive} />
+        <View className=" items-center">
+          <Trends data={topFive} />
+        </View>
       </View>
       <View className="flex-row justify-between mt-2 mx-2">
         {nav.map((nav, i) => (

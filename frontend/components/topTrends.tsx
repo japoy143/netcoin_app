@@ -23,10 +23,15 @@ import {
 
 export default function TopTrends({ data }: coinsProps) {
   const window = useWindowDimensions();
+  const height = window.height;
+  const width = window.width;
   const [currentindex, setCurrentIndex] = useState(0);
 
   return (
-    <View className="mt-4 items-center mx-4  ">
+    <View
+      className=" mt-2   items-center  justify-center "
+      style={{ width: width * 0.95 }}
+    >
       {data.length === 5 ? (
         <FlatList
           data={data}
@@ -35,15 +40,15 @@ export default function TopTrends({ data }: coinsProps) {
           showsHorizontalScrollIndicator={false}
           snapToAlignment="center"
           decelerationRate="fast"
-          snapToInterval={window.width}
+          snapToInterval={width * 0.95}
           onScroll={(e) => {
             const x = e.nativeEvent.contentOffset.x;
-            setCurrentIndex(Math.floor(x / window.width));
+            setCurrentIndex(Math.floor(x / (width * 0.95)));
           }}
           renderItem={({ item, index }) => (
             <View
-              className="  bg-white  justify-between items-center  flex-row px-8 "
-              style={{ height: window.height * 0.2, width: window.width }}
+              className="  bg-white rounded-lg justify-between items-center  flex-row px-8 "
+              style={{ height: window.height * 0.2, width: width * 0.95 }}
             >
               <View className=" items-center">
                 <Image
