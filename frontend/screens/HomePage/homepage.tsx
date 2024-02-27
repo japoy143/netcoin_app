@@ -21,6 +21,7 @@ const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
 
 const API = "api.coincap.io/v2/assets";
 import axios from "axios";
+import { filteredDataImage } from "../../components/reusableFunctions";
 
 //coin objects
 

@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React, { Component, useMemo } from "react";
 import { Text, StyleSheet, View, FlatList, Image } from "react-native";
-
 import {
   getPercent,
   filteredDataImage,
@@ -14,24 +13,29 @@ type StatisticsProps = {
   width: number;
   data: any[];
 };
-export function StatisticList({ height, width, data }: StatisticsProps) {
+export default function StatisticList({
+  height,
+  width,
+  data,
+}: StatisticsProps) {
+  const filtered = filteredDataImage(data);
+  const halfData = filtered.slice(0, filtered.length / 2);
   return (
     <View className="rounded-md  " style={{ height: height, width: width }}>
       <FlatList
-        data={filteredDataImage(data)}
-        horizontal
+        data={halfData}
         snapToInterval={width}
-        keyExtractor={(item, index) => index.toString()}
+        horizontal
         renderItem={({ item }) => (
           <View
             className="  justify-center  flex-1 rounded-lg bg-black px-6 "
-            style={{ width: width }}
+            style={{ width: width, height: height }}
           >
             <View className=" flex-row  justify-evenly">
               <View className=" flex-row justify-evenly ">
                 <Image
                   source={getCryptoImage(item.symbol)}
-                  className="h-16 w-16 mr-2"
+                  className="h-10 w-10 mr-2"
                   resizeMode="contain"
                 />
                 <View>

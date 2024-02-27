@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useMemo, useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
-import { StatisticList } from "../../components/statisticList";
+import StatisticList from "../../components/statisticList";
 
 type statisticsSummaryProps = {
   data: any[];
@@ -18,6 +18,7 @@ export default function StatisticsSummaryPage({
   const dayToday = dateNow.getDay();
 
   const week = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+
   return (
     <View className=" flex-1 ">
       <StatisticList width={width * 0.95} height={height * 0.5} data={data} />
