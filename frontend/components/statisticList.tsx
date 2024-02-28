@@ -1,13 +1,18 @@
 import React, { Component, useMemo } from "react";
 import { Text, StyleSheet, View, FlatList, Image } from "react-native";
+
 import {
   getPercent,
   filteredDataImage,
   getCryptoImage,
   getPrice,
   getCryptoNameAndSplit,
+  getPercentageChange,
   Images,
 } from "./reusableFunctions";
+
+import ChartStatistics from "./chart";
+
 type StatisticsProps = {
   height: number;
   width: number;
@@ -20,6 +25,7 @@ export default function StatisticList({
 }: StatisticsProps) {
   const filtered = filteredDataImage(data);
   const halfData = filtered.slice(0, filtered.length / 2);
+
   return (
     <View className="rounded-md  " style={{ height: height, width: width }}>
       <FlatList
@@ -72,6 +78,17 @@ export default function StatisticList({
                   {getPercent(item.changePercent24Hr)} %
                 </Text>
               </View>
+            </View>
+            <View className=" item-center mt-2 ">
+              <ChartStatistics
+                yesterday={getPercentageChange(
+                  item.changePercent24Hr,
+                  item.priceUsd
+                )}
+                today={getPrice(item.priceUsd)}
+                height={height - height * 0.3}
+                width={width - width * 0.2}
+              />
             </View>
           </View>
         )}
