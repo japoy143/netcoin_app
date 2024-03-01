@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from "react";
+import React, { Component, useEffect, useMemo } from "react";
 import { Text, StyleSheet, View, FlatList, Image } from "react-native";
 
 import {
@@ -9,22 +9,57 @@ import {
   getCryptoNameAndSplit,
   getPercentageChange,
   Images,
+  dayStringToInt,
 } from "./reusableFunctions";
 
 import ChartStatistics from "./chart";
+import { DailyUpdate } from "../screens/HomePage/homepage";
+import axios from "axios";
+const API = "http://192.168.254.161:3000/statistics/data";
 
 type StatisticsProps = {
   height: number;
   width: number;
   data: any[];
+  dailyUpdates: DailyUpdate[];
+  date: number;
 };
 export default function StatisticList({
   height,
   width,
   data,
+  dailyUpdates,
+  date,
 }: StatisticsProps) {
   const filtered = filteredDataImage(data);
   const halfData = filtered.slice(0, filtered.length / 2);
+  const currentPrice = filtered.flatMap((cryp) => ({
+    price: cryp["priceUsd"],
+    symbol: cryp["symbol"],
+  }));
+  const getTodayDate = dailyUpdates.find(
+    (day) => date === parseInt(day["dayIndex"])
+  );
+  console.log(getTodayDate);
+
+  //destructuring
+  const { _id, price, dayIndex, day, done } = getTodayDate || {};
+
+  console.log(day);
+  const isDone = dayStringToInt(done);
+  useEffect(() => {
+    const updateToday = async () => {
+      const stats = await axios.patch(`${API}/${_id}`, {
+        price: [currentPrice],
+        dayIndex: dayIndex,
+        day: day,
+        done: 1,
+      });
+    };
+    if (isDone === 0) {
+      updateToday();
+    }
+  }, []);
 
   return (
     <View className="rounded-md  " style={{ height: height, width: width }}>

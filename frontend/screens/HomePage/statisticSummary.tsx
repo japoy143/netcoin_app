@@ -1,12 +1,17 @@
 import React, { Component, useEffect, useMemo, useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import StatisticList from "../../components/statisticList";
-
+import axios from "axios";
+import { dayStringToInt } from "../../components/reusableFunctions";
+import { DailyUpdate } from "./homepage";
 type statisticsSummaryProps = {
   data: any[];
+  dailyUpdates: DailyUpdate[];
 };
+
 export default function StatisticsSummaryPage({
   data,
+  dailyUpdates,
 }: statisticsSummaryProps) {
   //for dynamic sizing or responsiveness
   const window = useWindowDimensions();
@@ -21,7 +26,13 @@ export default function StatisticsSummaryPage({
 
   return (
     <View className=" flex-1 ">
-      <StatisticList width={width * 0.95} height={height * 0.5} data={data} />
+      <StatisticList
+        width={width * 0.95}
+        height={height * 0.5}
+        data={data}
+        dailyUpdates={dailyUpdates}
+        date={dayToday}
+      />
       <View className="mt-2 items-center">
         <View className=" flex-row ">
           {week.map((day, i) => (

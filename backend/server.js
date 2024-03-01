@@ -23,6 +23,10 @@ mongoose
   })
   .catch(() => console.log(`DB connection failed`.red));
 
-const route = require("./routes/userRoutes");
+const routeUser = require("./routes/userRoutes");
 
-app.use("/users/login", route);
+app.use("/users/login", routeUser);
+
+const routeStat = require("./routes/statisticsRoutes");
+
+app.use("/statistics/data/", routeStat);

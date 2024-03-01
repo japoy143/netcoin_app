@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { BellIcon } from "react-native-heroicons/outline";
 
@@ -19,29 +20,52 @@ import { Coins, Statistics, Market } from "./export";
 //api
 const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
 
-const API = "api.coincap.io/v2/assets";
+const API = "http://192.168.254.161:3000/statistics/data";
 import axios from "axios";
-import { filteredDataImage } from "../../components/reusableFunctions";
 
-//coin objects
+export interface DailyUpdate {
+  [type: string]: string;
+}
 
 export default function Home() {
   //statusbar spacing
   const height: number | undefined = StatusBar.currentHeight;
   const [notification, isNotification] = useState();
+  const [isDataFetch, setIsDataFetch] = useState<number>(0);
   const window = useWindowDimensions();
 
   // all crypto
   const [coins, setCoins] = useState([]);
 
+  //daiyUpdates
+  const [daily, setDaily] = useState<DailyUpdate[]>([]);
+
   useEffect(() => {
     const fetchCrypto = async () => {
-      const coins = await axios.get("https://api.coincap.io/v2/assets", {
-        headers: { Authorization: `Bearer ${API_KEY}` },
-      });
-      setCoins(coins.data["data"]);
-      console.log(coins);
+      try {
+        const coins = await axios.get("https://api.coincap.io/v2/assets", {
+          headers: { Authorization: `Bearer ${API_KEY}` },
+        });
+        setCoins(coins.data["data"]);
+        console.log(coins);
+      } catch (error) {
+        Alert.alert("Fetching Error", "Data not Fetch");
+      }
     };
+    const fetchDailyUpdates = async () => {
+      try {
+        const stats = await axios.get(API);
+        setDaily(stats.data["stats"]);
+        console.log(stats.data["stats"]);
+      } catch (error) {
+        Alert.alert("Fetching Error", "Data not Fetch");
+      }
+    };
+
+    if (isDataFetch !== 1) {
+      fetchDailyUpdates();
+      setIsDataFetch(1);
+    }
 
     const intervalID = setInterval(() => {
       fetchCrypto();
@@ -55,7 +79,7 @@ export default function Home() {
   const screens = [
     <Coins data={coins} />,
     <Market data={coins} />,
-    <Statistics data={coins} />,
+    <Statistics data={coins} dailyUpdates={daily} />,
   ];
   const [navIndex, setNavIndex] = useState(0);
 
