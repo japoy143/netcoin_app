@@ -1,8 +1,6 @@
 import React, { Component, useEffect, useMemo, useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import StatisticList from "../../components/statisticList";
-import axios from "axios";
-import { dayStringToInt } from "../../components/reusableFunctions";
 import { DailyUpdate } from "./homepage";
 type statisticsSummaryProps = {
   data: any[];
@@ -22,6 +20,7 @@ export default function StatisticsSummaryPage({
   //day number
   const dayToday = dateNow.getDay();
 
+  const meomizedData = useMemo(() => data, [data]);
   const week = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
 
   return (
@@ -29,7 +28,7 @@ export default function StatisticsSummaryPage({
       <StatisticList
         width={width * 0.95}
         height={height * 0.5}
-        data={data}
+        data={meomizedData}
         dailyUpdates={dailyUpdates}
         date={dayToday}
       />

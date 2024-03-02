@@ -23,8 +23,16 @@ const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
 const API = "http://192.168.254.161:3000/statistics/data";
 import axios from "axios";
 
+interface PriceItem {
+  price: string;
+  symbol: string;
+}
 export interface DailyUpdate {
-  [type: string]: string;
+  _id: string;
+  price: PriceItem[][];
+  dayIndex: string;
+  day: string;
+  done: any;
 }
 
 export default function Home() {
@@ -74,7 +82,7 @@ export default function Home() {
     return () => clearInterval(intervalID);
   }, []);
 
-  //Navigations
+  //Navigation
   const nav = ["Coins", "Market", "Statistics"];
   const screens = [
     <Coins data={coins} />,
@@ -82,7 +90,7 @@ export default function Home() {
     <Statistics data={coins} dailyUpdates={daily} />,
   ];
   const [navIndex, setNavIndex] = useState(0);
-
+  console.log(daily.map((price) => price.price[0]));
   //topfive
   const topFive: string[] = coins.slice(0, 5);
 

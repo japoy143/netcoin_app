@@ -41,7 +41,7 @@ const getCurrentCryptoPrice = async (req, res) => {
     return res.status(404).json({ message: "Data not found" });
   }
 
-  return res.status(200).json({ message: "Data Deleted Successfully", stats });
+  return res.status(200).json({ message: "Data Fetch Successfully", stats });
 };
 // delete crypto price data
 const deleteCurrentCryptoPrice = async (req, res) => {

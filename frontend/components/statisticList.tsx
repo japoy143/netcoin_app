@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useMemo } from "react";
-import { Text, StyleSheet, View, FlatList, Image } from "react-native";
+import React, { useEffect } from "react";
+import { Text, View, FlatList, Image } from "react-native";
 
 import {
   getPercent,
@@ -7,7 +7,6 @@ import {
   getCryptoImage,
   getPrice,
   getCryptoNameAndSplit,
-  getPercentageChange,
   Images,
   dayStringToInt,
 } from "./reusableFunctions";
@@ -24,6 +23,7 @@ type StatisticsProps = {
   dailyUpdates: DailyUpdate[];
   date: number;
 };
+
 export default function StatisticList({
   height,
   width,
@@ -67,7 +67,7 @@ export default function StatisticList({
         data={halfData}
         snapToInterval={width}
         horizontal
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View
             className="  justify-center  flex-1 rounded-lg bg-black px-6 "
             style={{ width: width, height: height }}
@@ -116,13 +116,11 @@ export default function StatisticList({
             </View>
             <View className=" item-center mt-2 ">
               <ChartStatistics
-                yesterday={getPercentageChange(
-                  item.changePercent24Hr,
-                  item.priceUsd
-                )}
-                today={getPrice(item.priceUsd)}
+                index={index}
+                dailyUpdates={dailyUpdates}
+                weekly={dailyUpdates}
                 height={height - height * 0.3}
-                width={width - width * 0.2}
+                width={width}
               />
             </View>
           </View>
