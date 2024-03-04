@@ -8,7 +8,6 @@ import {
   getPrice,
   getCryptoNameAndSplit,
   Images,
-  dayStringToInt,
 } from "./reusableFunctions";
 
 import ChartStatistics from "./chart";
@@ -40,13 +39,11 @@ export default function StatisticList({
   const getTodayDate = dailyUpdates.find(
     (day) => date === parseInt(day["dayIndex"])
   );
-  console.log(getTodayDate);
 
   //destructuring
   const { _id, price, dayIndex, day, done } = getTodayDate || {};
 
-  console.log(day);
-  const isDone = dayStringToInt(done);
+  const isDone = parseInt(done);
   useEffect(() => {
     const updateToday = async () => {
       const stats = await axios.patch(`${API}/${_id}`, {
@@ -118,7 +115,6 @@ export default function StatisticList({
               <ChartStatistics
                 index={index}
                 dailyUpdates={dailyUpdates}
-                weekly={dailyUpdates}
                 height={height - height * 0.3}
                 width={width}
               />

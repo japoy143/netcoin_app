@@ -1,6 +1,7 @@
-import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import StackRoutes from "./routes/StackRoutes";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 export default function App() {
   const [fonts] = useFonts({
@@ -9,5 +10,9 @@ export default function App() {
 
   if (!fonts) return undefined;
 
-  return <StackRoutes />;
+  return (
+    <Provider store={store}>
+      <StackRoutes />
+    </Provider>
+  );
 }

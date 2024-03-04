@@ -66,10 +66,6 @@ export const getCryptoNameAndSplit = (name: string) => {
   return cryptoName[0];
 };
 
-export const dayStringToInt = (day: string) => {
-  return parseInt(day);
-};
-
 //get the priceadded using percentage
 export const getPercentageChange = (percent: string, price: string) => {
   const change = parseInt(percent);

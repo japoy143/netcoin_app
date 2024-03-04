@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import StatisticList from "../../components/statisticList";
 import { DailyUpdate } from "./homepage";
@@ -32,6 +32,7 @@ export default function StatisticsSummaryPage({
         dailyUpdates={dailyUpdates}
         date={dayToday}
       />
+
       <View className="mt-2 items-center">
         <View className=" flex-row ">
           {week.map((day, i) => (

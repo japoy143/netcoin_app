@@ -1,7 +1,6 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
-  StyleSheet,
   View,
   StatusBar,
   TouchableOpacity,
@@ -22,7 +21,11 @@ const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
 
 const API = "http://192.168.254.161:3000/statistics/data";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { set } from "../../redux/week";
 
+//server props
 interface PriceItem {
   price: string;
   symbol: string;
@@ -46,7 +49,9 @@ export default function Home() {
   const [coins, setCoins] = useState([]);
 
   //daiyUpdates
-  const [daily, setDaily] = useState<DailyUpdate[]>([]);
+  // const [daily, setDaily] = useState<DailyUpdate[]>([]);
+  const daily = useAppSelector((state) => state.daily.value);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchCrypto = async () => {
@@ -55,16 +60,15 @@ export default function Home() {
           headers: { Authorization: `Bearer ${API_KEY}` },
         });
         setCoins(coins.data["data"]);
-        console.log(coins);
       } catch (error) {
         Alert.alert("Fetching Error", "Data not Fetch");
       }
     };
+
     const fetchDailyUpdates = async () => {
       try {
         const stats = await axios.get(API);
-        setDaily(stats.data["stats"]);
-        console.log(stats.data["stats"]);
+        dispatch(set(stats.data["stats"]));
       } catch (error) {
         Alert.alert("Fetching Error", "Data not Fetch");
       }
@@ -82,6 +86,7 @@ export default function Home() {
     return () => clearInterval(intervalID);
   }, []);
 
+  console.log(daily);
   //Navigation
   const nav = ["Coins", "Market", "Statistics"];
   const screens = [
@@ -90,7 +95,7 @@ export default function Home() {
     <Statistics data={coins} dailyUpdates={daily} />,
   ];
   const [navIndex, setNavIndex] = useState(0);
-  console.log(daily.map((price) => price.price[0]));
+
   //topfive
   const topFive: string[] = coins.slice(0, 5);
 
@@ -116,6 +121,7 @@ export default function Home() {
           <Trends data={topFive} />
         </View>
       </View>
+
       <View className="flex-row justify-between mt-2 mx-2">
         {nav.map((nav, i) => (
           <TouchableOpacity
@@ -131,6 +137,7 @@ export default function Home() {
           </TouchableOpacity>
         ))}
       </View>
+
       <View className="mt-2 items-center flex-1 ">{screens[navIndex]}</View>
     </KeyboardAvoidingView>
   );

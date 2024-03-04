@@ -1,7 +1,6 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
-  StyleSheet,
   View,
   FlatList,
   Image,
@@ -14,7 +13,6 @@ type coinsProps = {
 };
 
 import {
-  getPrice,
   getCryptoImage,
   getPercent,
   getPriceTwoDecimal,

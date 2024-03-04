@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { DailyUpdate } from "../screens/HomePage/homepage";
+
 interface ChartProps {
-  weekly: DailyUpdate[];
   width: number;
   height: number;
   dailyUpdates: DailyUpdate[];
@@ -11,7 +11,6 @@ interface ChartProps {
 }
 
 export default function ChartStatistics({
-  weekly,
   width,
   height,
   dailyUpdates,
@@ -21,20 +20,21 @@ export default function ChartStatistics({
   const [saturday, friday, thursday, wednesday, tuesday, monday, sunday] =
     prices || [];
 
-  // to refactor
+  const dailyDataSet = [
+    sunday,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+  ];
+
   const data = {
     labels: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
     datasets: [
       {
-        data: [
-          parseInt(saturday[index].price),
-          parseInt(friday[index].price),
-          parseInt(thursday[index].price),
-          parseInt(wednesday[index].price),
-          parseInt(tuesday[index].price),
-          parseInt(monday[index].price),
-          parseInt(sunday[index].price),
-        ],
+        data: dailyDataSet.flatMap((day) => parseInt(day[index].price)),
         strokeWidth: 2,
       },
     ],
