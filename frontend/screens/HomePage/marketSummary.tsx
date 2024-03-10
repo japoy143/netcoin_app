@@ -5,6 +5,7 @@ import {
   TextInput,
   useWindowDimensions,
   TouchableOpacity,
+  KeyboardAvoidingView,
   Image,
   FlatList,
 } from "react-native";
@@ -92,7 +93,7 @@ export default function MarketSummaryPage({ data }: Crypto) {
   };
 
   return (
-    <View className=" flex-1 mx-2">
+    <KeyboardAvoidingView className=" flex-1 mx-2" behavior="padding" enabled={true}>
       <View className=" flex-row  items-center  ">
         <View
           className=" bg-gray-300 justify-center px-4 rounded-md "
@@ -227,6 +228,6 @@ export default function MarketSummaryPage({ data }: Crypto) {
           }}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

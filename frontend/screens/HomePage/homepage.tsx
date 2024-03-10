@@ -10,20 +10,30 @@ import {
 } from "react-native";
 import { BellIcon } from "react-native-heroicons/outline";
 
+//controllers
+import {
+  fetchCrypto,
+  fetchDailyUpdates,
+  fetchNotifications,
+} from "../../controllers/fetching";
 //components
-import { Trends } from "../../components/export";
+import { Trends, Notification } from "../../components/export";
 
 //screens
 import { Coins, Statistics, Market } from "./export";
 
 //api
-const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
+// const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
 
-const API = "http://192.168.254.161:3000/statistics/data";
+// const STATISTICS_API = "http://192.168.254.161:3000/statistics/data";
+// const NOTIFICATION_API = "http://192.168.254.161:3000/notification/messages/";
+// const ID = "65ed029393bc1629a0fcba23";
+
 import axios from "axios";
-import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { set } from "../../redux/week";
+import { setDaily } from "../../redux/week";
+import { setNotifications } from "../../redux/notifications";
+import { setCoins } from "../../redux/data";
 
 //server props
 interface PriceItem {
@@ -37,54 +47,50 @@ export interface DailyUpdate {
   day: string;
   done: any;
 }
+//notification type
+interface message {
+  name: string;
+  symbol: string;
+  price: string;
+  percentage: string;
+  read: string;
+}
+export interface notification {
+  message: message[];
+}
 
 export default function Home() {
   //statusbar spacing
-  const height: number | undefined = StatusBar.currentHeight;
   const [notification, isNotification] = useState();
   const [isDataFetch, setIsDataFetch] = useState<number>(0);
+  const [isNotificationOpen, setNotificationOpen] = useState<boolean>(false);
   const window = useWindowDimensions();
 
   // all crypto
-  const [coins, setCoins] = useState([]);
-
-  //daiyUpdates
-  // const [daily, setDaily] = useState<DailyUpdate[]>([]);
+  // const [coins, setCoins] = useState([]);
+  const coins = useAppSelector((state) => state.coins.value);
+  //dailyupdates
   const daily = useAppSelector((state) => state.daily.value);
+  //notifications list
+  const notifications = useAppSelector((state) => state.notifications.value);
+
+  // dispatch function
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchCrypto = async () => {
-      try {
-        const coins = await axios.get("https://api.coincap.io/v2/assets", {
-          headers: { Authorization: `Bearer ${API_KEY}` },
-        });
-        setCoins(coins.data["data"]);
-      } catch (error) {
-        Alert.alert("Fetching Error", "Data not Fetch");
-      }
-    };
-
-    const fetchDailyUpdates = async () => {
-      try {
-        const stats = await axios.get(API);
-        dispatch(set(stats.data["stats"]));
-      } catch (error) {
-        Alert.alert("Fetching Error", "Data not Fetch");
-      }
-    };
-
+    fetchNotifications({ dispatch });
     if (isDataFetch !== 1) {
-      fetchDailyUpdates();
+      fetchDailyUpdates({ dispatch });
       setIsDataFetch(1);
     }
-
     const intervalID = setInterval(() => {
-      fetchCrypto();
+      fetchCrypto({ dispatch });
     }, 10000);
-    fetchCrypto();
+    fetchCrypto({ dispatch });
     return () => clearInterval(intervalID);
   }, []);
+
+  console.log(notifications);
 
   console.log(daily);
   //Navigation
@@ -100,8 +106,14 @@ export default function Home() {
   const topFive: string[] = coins.slice(0, 5);
 
   return (
-    <KeyboardAvoidingView className="flex-1" behavior="padding" enabled>
-      <View className={` h-[30%]  bg-black  `} style={{ marginTop: height }}>
+    <KeyboardAvoidingView
+      className="flex-1"
+      behavior="height"
+      enabled={true}
+      keyboardVerticalOffset={100}
+    >
+      <View className={` h-[30%]  bg-black  `}>
+        <StatusBar barStyle={"light-content"} />
         <View className=" flex-row   mt-2 items-center justify-between px-5">
           <View className=" w-10"></View>
           <Text
@@ -110,7 +122,15 @@ export default function Home() {
           >
             netcoin
           </Text>
-          <TouchableOpacity className="relative">
+          <TouchableOpacity
+            className="relative"
+            onPress={() => setNotificationOpen(true)}
+          >
+            <Notification
+              notifications={notifications}
+              isOpen={isNotificationOpen}
+              setIsOpen={setNotificationOpen}
+            />
             <BellIcon color={"white"} size={30} />
             {notification && (
               <View className=" bg-red-500 h-2 rounded-full w-2 absolute right-1 top-1"></View>

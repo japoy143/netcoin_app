@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "./store";
 
 import { DailyUpdate } from "../screens/HomePage/homepage";
 
@@ -15,12 +14,12 @@ export const DailyPriceUpdate = createSlice({
   name: "daily price update",
   initialState,
   reducers: {
-    set: (state, action: PayloadAction<DailyUpdate[]>) => {
+    setDaily: (state, action: PayloadAction<DailyUpdate[]>) => {
       state.value = action.payload;
     },
   },
 });
 
-export const { set } = DailyPriceUpdate.actions;
+export const { setDaily } = DailyPriceUpdate.actions;
 
 export default DailyPriceUpdate.reducer;
