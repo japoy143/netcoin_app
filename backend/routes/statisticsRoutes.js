@@ -15,7 +15,7 @@ route.post("/", postCurrentCryptoPrice);
 route.get("/", getAllCurrentCryptoPrice);
 //get specific data
 route.get("/:id", getCurrentCryptoPrice);
-// delete data
+// delete datac
 route.delete("/:id", deleteCurrentCryptoPrice);
 // update data
 route.patch("/:id", updateCurrentCryptoPrice);

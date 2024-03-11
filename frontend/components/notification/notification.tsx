@@ -3,7 +3,6 @@ import { View, Modal, Text, Image, TouchableOpacity } from "react-native";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import NotificationList from "./notificationList";
 import { notification } from "../../screens/HomePage/homepage";
-
 type NotificationProps = {
   isOpen: boolean;
   notifications: notification[];
@@ -34,10 +33,7 @@ export default function Notification({
           >
             Notifications
           </Text>
-
-          <View className=" h-12 w-12 rounded-full bg-white">
-            <Image />
-          </View>
+          <View></View>
         </View>
         <NotificationList notifications={notifications} />
       </View>

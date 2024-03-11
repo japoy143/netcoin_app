@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   KeyboardAvoidingView,
-  Alert,
 } from "react-native";
 import { BellIcon } from "react-native-heroicons/outline";
 
@@ -15,25 +14,17 @@ import {
   fetchCrypto,
   fetchDailyUpdates,
   fetchNotifications,
+  updateNotifications,
+  handleClick,
 } from "../../controllers/fetching";
 //components
 import { Trends, Notification } from "../../components/export";
 
 //screens
 import { Coins, Statistics, Market } from "./export";
-
-//api
-// const API_KEY = `34413f7c-4968-4dfb-a496-76844da6f4f1`;
-
-// const STATISTICS_API = "http://192.168.254.161:3000/statistics/data";
-// const NOTIFICATION_API = "http://192.168.254.161:3000/notification/messages/";
-// const ID = "65ed029393bc1629a0fcba23";
-
-import axios from "axios";
+//redux hooks
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setDaily } from "../../redux/week";
-import { setNotifications } from "../../redux/notifications";
-import { setCoins } from "../../redux/data";
+import { setNotify } from "../../redux/notify";
 
 //server props
 interface PriceItem {
@@ -57,11 +48,10 @@ interface message {
 }
 export interface notification {
   message: message[];
+  updatedAt: string;
 }
-
 export default function Home() {
   //statusbar spacing
-  const [notification, isNotification] = useState();
   const [isDataFetch, setIsDataFetch] = useState<number>(0);
   const [isNotificationOpen, setNotificationOpen] = useState<boolean>(false);
   const window = useWindowDimensions();
@@ -73,26 +63,43 @@ export default function Home() {
   const daily = useAppSelector((state) => state.daily.value);
   //notifications list
   const notifications = useAppSelector((state) => state.notifications.value);
+  //isnotified
+  const isNotified = useAppSelector((state) => state.isnotify.value);
 
   // dispatch function
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetchNotifications({ dispatch });
+    //get the crypto data
+    fetchCrypto({ dispatch });
+    // ensure that it will only render once a day
     if (isDataFetch !== 1) {
       fetchDailyUpdates({ dispatch });
+      fetchNotifications({ dispatch });
       setIsDataFetch(1);
     }
-    const intervalID = setInterval(() => {
+    // fetch data every 10 seconds
+    const fetchCryptoIntervalId = setInterval(() => {
       fetchCrypto({ dispatch });
     }, 10000);
-    fetchCrypto({ dispatch });
-    return () => clearInterval(intervalID);
+
+    //update read to 0 for new notifications
+    const updateNotifs = setInterval(() => {
+      updateNotifications();
+    }, 1700000);
+
+    // fetch notifications every 30 minutes
+    const fetchNotificationsIntervalID = setInterval(() => {
+      fetchNotifications({ dispatch });
+    }, 1800000);
+
+    return () => {
+      clearInterval(fetchCryptoIntervalId);
+      clearInterval(updateNotifs);
+      clearInterval(fetchNotificationsIntervalID);
+    };
   }, []);
 
-  console.log(notifications);
-
-  console.log(daily);
   //Navigation
   const nav = ["Coins", "Market", "Statistics"];
   const screens = [
@@ -104,6 +111,12 @@ export default function Home() {
 
   //topfive
   const topFive: string[] = coins.slice(0, 5);
+
+  const isNotifyTapped = () => {
+    setNotificationOpen(true);
+    dispatch(setNotify(false));
+    handleClick;
+  };
 
   return (
     <KeyboardAvoidingView
@@ -122,17 +135,14 @@ export default function Home() {
           >
             netcoin
           </Text>
-          <TouchableOpacity
-            className="relative"
-            onPress={() => setNotificationOpen(true)}
-          >
+          <TouchableOpacity className="relative" onPress={isNotifyTapped}>
             <Notification
               notifications={notifications}
               isOpen={isNotificationOpen}
               setIsOpen={setNotificationOpen}
             />
             <BellIcon color={"white"} size={30} />
-            {notification && (
+            {isNotified && (
               <View className=" bg-red-500 h-2 rounded-full w-2 absolute right-1 top-1"></View>
             )}
           </TouchableOpacity>

@@ -3,7 +3,8 @@ import { Alert } from "react-native";
 import { setCoins } from "../redux/data";
 import { setDaily } from "../redux/week";
 import { setNotifications } from "../redux/notifications";
-
+import { setNotify } from "../redux/notify";
+import { notification } from "../screens/HomePage/homepage";
 // all dispatch function must come from parent directory
 interface fetchData {
   dispatch: any;
@@ -35,11 +36,10 @@ export const fetchCrypto = async ({ dispatch }: fetchData) => {
       `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
       {
         message: dataObjects,
-        read: 0,
       }
     );
   } catch (error) {
-    Alert.alert("Fetching Error", "Data not Fetch");
+    Alert.alert("Fetching Error Crypto", "Data not Fetch");
   }
 };
 
@@ -49,7 +49,7 @@ export const fetchDailyUpdates = async ({ dispatch }: fetchData) => {
     const stats = await axios.get(`${process.env.STATISTICS_API}`);
     dispatch(setDaily(stats.data["stats"]));
   } catch (error) {
-    Alert.alert("Fetching Error", "Data not Fetch");
+    Alert.alert("Fetching Error Updates", "Data not Fetch");
   }
 };
 
@@ -58,7 +58,64 @@ export const fetchNotifications = async ({ dispatch }: fetchData) => {
   try {
     const notification = await axios.get(`${process.env.NOTIFICATION_API}`);
     dispatch(setNotifications(notification.data["notif"]));
+    const notif = notification.data["notif"];
+    const read = notif.flatMap((item: { [x: string]: any }) =>
+      parseInt(item["read"])
+    );
+    console.log(read, "READ");
+    if (read[0] === 0) {
+      dispatch(setNotify(true));
+    }
   } catch (error) {
-    Alert.alert("Fetching Error", "Data not Fetch");
+    Alert.alert("Fetching Error Notification", "Data not Fetch");
+  }
+};
+
+export const updateNotifications = async () => {
+  try {
+    const notifications = await axios.patch(
+      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      {
+        read: 0,
+      }
+    );
+  } catch (error) {
+    Alert.alert("Updating Error Notification", "Data not Updated");
+  }
+};
+
+//update read
+export const handleClick = async () => {
+  try {
+    const notification = await axios.patch(
+      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      {
+        read: 1,
+      }
+    );
+  } catch (error) {
+    Alert.alert("Fetching Error Notification", "Data not Updated");
+  }
+};
+
+//update item read
+export const messageRead = async (
+  notifications: notification[],
+  index: number
+) => {
+  const tapped = notifications.map((item) => {
+    const change = item.message[index];
+    const update = { ...change, read: 1 };
+    return { ...item.message, update };
+  });
+  try {
+    const notification = await axios.patch(
+      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      {
+        message: tapped,
+      }
+    );
+  } catch (error) {
+    console.log("ERROR UPDATE");
   }
 };

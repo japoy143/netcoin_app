@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(MONGO_URI)
   .then(() => {
     app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`.blue));
     console.log(`DB Successfully connected`.blue);
@@ -30,3 +30,7 @@ app.use("/users/login", routeUser);
 const routeStat = require("./routes/statisticsRoutes");
 
 app.use("/statistics/data/", routeStat);
+
+const routeNotif = require("./routes/notificationRoutes");
+
+app.use("/notification/messages/", routeNotif);
