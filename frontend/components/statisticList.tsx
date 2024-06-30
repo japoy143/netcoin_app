@@ -12,8 +12,8 @@ import {
 
 import ChartStatistics from "./chart";
 import { DailyUpdate } from "../screens/HomePage/homepage";
-import axios from "axios";
-const API = "http://192.168.254.161:3000/statistics/data";
+import { axiosCustom } from "../api/axios";
+const API = "/statistics/data";
 
 type StatisticsProps = {
   height: number;
@@ -46,7 +46,7 @@ export default function StatisticList({
   const isDone = parseInt(done);
   useEffect(() => {
     const updateToday = async () => {
-      const stats = await axios.patch(`${API}/${_id}`, {
+      const stats = await axiosCustom.patch(`${API}/${_id}`, {
         price: [currentPrice],
         dayIndex: dayIndex,
         day: day,

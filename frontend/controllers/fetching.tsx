@@ -1,4 +1,5 @@
 import axios from "axios";
+import { axiosCustom } from "../api/axios";
 import { Alert } from "react-native";
 import { setCoins } from "../redux/data";
 import { setDaily } from "../redux/week";
@@ -32,7 +33,7 @@ export const fetchCrypto = async ({ dispatch }: fetchData) => {
     }));
     console.log(filtered, "Objects");
 
-    const updateNotifications = await axios.patch(
+    const updateNotifications = await axiosCustom.patch(
       `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
       {
         message: dataObjects,
@@ -46,7 +47,7 @@ export const fetchCrypto = async ({ dispatch }: fetchData) => {
 //for fetching daily updates
 export const fetchDailyUpdates = async ({ dispatch }: fetchData) => {
   try {
-    const stats = await axios.get(`${process.env.STATISTICS_API}`);
+    const stats = await axiosCustom.get(`${process.env.STATISTICS_API}`);
     dispatch(setDaily(stats.data["stats"]));
   } catch (error) {
     Alert.alert("Fetching Error Updates", "Data not Fetch");
@@ -56,7 +57,9 @@ export const fetchDailyUpdates = async ({ dispatch }: fetchData) => {
 //for fetching notifications
 export const fetchNotifications = async ({ dispatch }: fetchData) => {
   try {
-    const notification = await axios.get(`${process.env.NOTIFICATION_API}`);
+    const notification = await axiosCustom.get(
+      `${process.env.NOTIFICATION_API}`
+    );
     dispatch(setNotifications(notification.data["notif"]));
     const notif = notification.data["notif"];
     const read = notif.flatMap((item: { [x: string]: any }) =>
@@ -73,7 +76,7 @@ export const fetchNotifications = async ({ dispatch }: fetchData) => {
 
 export const updateNotifications = async () => {
   try {
-    const notifications = await axios.patch(
+    const notifications = await axiosCustom.patch(
       `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
       {
         read: 0,
@@ -87,7 +90,7 @@ export const updateNotifications = async () => {
 //update read
 export const handleClick = async () => {
   try {
-    const notification = await axios.patch(
+    const notification = await axiosCustom.patch(
       `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
       {
         read: 1,
@@ -109,7 +112,7 @@ export const messageRead = async (
     return { ...item.message, update };
   });
   try {
-    const notification = await axios.patch(
+    const notification = await axiosCustom.patch(
       `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
       {
         message: tapped,
