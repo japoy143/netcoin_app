@@ -11,11 +11,17 @@ interface fetchData {
   dispatch: any;
 }
 
+const API_CRYPTO = "https://api.coincap.io/v2/assets";
+const API_KEY = "34413f7c-4968-4dfb-a496-76844da6f4f1";
+const STATISTICS_API = "/statistics/data";
+const NOTIFICATION_API = "/notification/messages/";
+const APP_ID = "6689019f57f098284dab5b56";
+
 // for fetching crypto
 export const fetchCrypto = async ({ dispatch }: fetchData) => {
   try {
-    const coins = await axios.get(`${process.env.API_CRYPTO}`, {
-      headers: { Authorization: `Bearer ${process.env.API_KEY}` },
+    const coins = await axios.get(`${API_CRYPTO}`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
     });
     dispatch(setCoins(coins.data["data"]));
     const data = coins.data["data"];
@@ -34,7 +40,7 @@ export const fetchCrypto = async ({ dispatch }: fetchData) => {
     console.log(filtered, "Objects");
 
     const updateNotifications = await axiosCustom.patch(
-      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      `${NOTIFICATION_API}/${APP_ID}`,
       {
         message: dataObjects,
       }
@@ -47,7 +53,7 @@ export const fetchCrypto = async ({ dispatch }: fetchData) => {
 //for fetching daily updates
 export const fetchDailyUpdates = async ({ dispatch }: fetchData) => {
   try {
-    const stats = await axiosCustom.get(`${process.env.STATISTICS_API}`);
+    const stats = await axiosCustom.get(`${STATISTICS_API}`);
     dispatch(setDaily(stats.data["stats"]));
   } catch (error) {
     Alert.alert("Fetching Error Updates", "Data not Fetch");
@@ -57,9 +63,7 @@ export const fetchDailyUpdates = async ({ dispatch }: fetchData) => {
 //for fetching notifications
 export const fetchNotifications = async ({ dispatch }: fetchData) => {
   try {
-    const notification = await axiosCustom.get(
-      `${process.env.NOTIFICATION_API}`
-    );
+    const notification = await axiosCustom.get(`${NOTIFICATION_API}`);
     dispatch(setNotifications(notification.data["notif"]));
     const notif = notification.data["notif"];
     const read = notif.flatMap((item: { [x: string]: any }) =>
@@ -77,7 +81,7 @@ export const fetchNotifications = async ({ dispatch }: fetchData) => {
 export const updateNotifications = async () => {
   try {
     const notifications = await axiosCustom.patch(
-      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      `${NOTIFICATION_API}/${APP_ID}`,
       {
         read: 0,
       }
@@ -91,7 +95,7 @@ export const updateNotifications = async () => {
 export const handleClick = async () => {
   try {
     const notification = await axiosCustom.patch(
-      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      `${NOTIFICATION_API}/${APP_ID}`,
       {
         read: 1,
       }
@@ -113,7 +117,7 @@ export const messageRead = async (
   });
   try {
     const notification = await axiosCustom.patch(
-      `${process.env.NOTIFICATION_API}/${process.env.APP_ID}`,
+      `${NOTIFICATION_API}/${APP_ID}`,
       {
         message: tapped,
       }
