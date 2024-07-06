@@ -14,7 +14,7 @@ interface fetchData {
 const API_CRYPTO = "https://api.coincap.io/v2/assets";
 const API_KEY = "34413f7c-4968-4dfb-a496-76844da6f4f1";
 const STATISTICS_API = "/statistics/data";
-const NOTIFICATION_API = "/notification/messages/";
+const NOTIFICATION_API = "/notification/messages";
 const APP_ID = "6689019f57f098284dab5b56";
 
 // for fetching crypto
