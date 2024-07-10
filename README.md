@@ -1,5 +1,7 @@
 
 # readme.md
+![NetcoinMockup](NetcoinMockup.png)
+
 Netcoin
 
 A crypto currency app that will show crypto prices realtime. The app can also convert crypto prices to usd price and the app show the statistics of the crypto.
