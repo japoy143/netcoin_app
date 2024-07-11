@@ -52,6 +52,15 @@ the choose the emulator
 
 then run.
 
+## API Routes
+```bash
+Get
+https://api.coincap.io/v2/assets
+/statistics/data
+Patch
+/notification/messages
+```
+
 ## Tech Stack
 
 "Client": React Native, Typescript and Expo
